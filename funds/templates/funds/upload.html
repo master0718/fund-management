@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Upload CSV - Fund Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input[type='file'] {
+        width: 100%;
+        padding: 8px;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .success {
+        color: green;
+        background-color: #d4edda;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+      }
+      .nav-links {
+        margin-bottom: 20px;
+      }
+      .nav-links a {
+        margin-right: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Upload CSV File</h1>
+
+      <div class="nav-links">
+        <a href="{% url 'fund_list' %}">View Funds</a>
+        <a href="{% url 'upload_csv' %}">Upload CSV</a>
+      </div>
+
+      {% if success_message %}
+      <div class="success">{{ success_message }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ form.csv_file.id_for_label }}"
+            >{{ form.csv_file.label }}</label
+          >
+          {{ form.csv_file }}
+          <small>{{ form.csv_file.help_text }}</small>
+        </div>
+        <button type="submit">Upload and Import</button>
+      </form>
+
+      <div style="margin-top: 30px">
+        <h3>CSV Format Requirements:</h3>
+        <p>Your CSV file should have these columns:</p>
+        <ul>
+          <li><strong>Name:</strong> Fund name</li>
+          <li><strong>Strategy:</strong> Investment strategy</li>
+          <li>
+            <strong>AUM (USD):</strong> Assets under management (can be empty)
+          </li>
+          <li>
+            <strong>Inception Date:</strong> Fund start date in MM/DD/YYYY
+            format (can be empty)
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

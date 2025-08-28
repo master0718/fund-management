@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fund Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .filter-section { margin-bottom: 20px; }
+        select, button { padding: 8px; margin-right: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .summary { margin-top: 20px; padding: 15px; background-color: #f9f9f9; }
+        .nav-links { margin-bottom: 20px; }
+        .nav-links a { margin-right: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fund Manager</h1>
+        
+        <div class="nav-links">
+            <a href="{% url 'fund_list' %}">View Funds</a>
+            <a href="{% url 'upload_csv' %}">Upload CSV</a>
+        </div>
+        
+        <div class="filter-section">
+            <form method="get">
+                <label for="strategy">Filter by Strategy:</label>
+                <select name="strategy" id="strategy" onchange="this.form.submit()">
+                    <option value="">All Strategies</option>
+                    {% for strategy in strategies %}
+                        <option value="{{ strategy }}" {% if strategy == selected_strategy %}selected{% endif %}>
+                            {{ strategy }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Strategy</th>
+                    <th>AUM (USD)</th>
+                    <th>Inception Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fund in funds %}
+                <tr>
+                    <td>{{ fund.name }}</td>
+                    <td>{{ fund.strategy }}</td>
+                    <td>{% if fund.aum %}${{ fund.aum|floatformat:0 }}{% else %}-{% endif %}</td>
+                    <td>{% if fund.inception_date %}{{ fund.inception_date }}{% else %}-{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No funds found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="summary">
+            <p><strong>Total Funds:</strong> {{ total_count }}</p>
+            <p><strong>Total AUM:</strong> ${{ total_aum|floatformat:0 }}</p>
+        </div>
+    </div>
+</body>
+</html>
